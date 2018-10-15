@@ -47,7 +47,7 @@ public class CountryMapperTest {
 
     private void printCountryList(List<Country> countryList) {
         for (Country country : countryList) {
-            System.out.printf("%-4d%4s$4s\n", country.getId(), country.getCountryname(), country.getCountrycode());
+            System.out.printf("%-4d%4s%4s\n", country.getId(), country.getCountryname(), country.getCountrycode());
         }
     }
 }
