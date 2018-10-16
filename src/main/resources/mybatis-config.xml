@@ -30,7 +30,8 @@
 
     <!-- 配置SQL语句和映射配置文件 -->
     <mappers>
-        <mapper resource="com/mingfei/mybatissamples/mapper/CountryMapper.xml"/>
+        <!--<mapper resource="com/mingfei/mybatissamples/mapper/CountryMapper.xml"/>-->
+        <package name="com.mingfei.mybatissamples.mapper"/>
     </mappers>
 
 </configuration>

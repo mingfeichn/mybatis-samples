@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingfei.mybatissamples.mapper.UserMapper">
+    <resultMap id="userMap" type="SysUser">
+        <id property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="headImg" column="head_img"/>
+        <result property="userInfo" column="user_info" jdbcType="BLOB"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insert">
+        insert into sys_user (
+        id, user_name, user_password, user_email, user_info, head_img, create_time )
+        values (
+        #{id}, #{userName}, #{userPassword}, #{userEmail}, #{userInfo},
+        #{headImg, jdbcType = BLOB}, #{createTime, jdbcType = TIMESTAMP})
+    </insert>
+    <insert id="insert2" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user (
+        user_name, user_password, user_email, user_info, head_img, create_time )
+        values (
+        #{userName}, #{userPassword}, #{userEmail}, #{userInfo},
+        #{headImg, jdbcType = BLOB}, #{createTime, jdbcType = TIMESTAMP})
+    </insert>
+
+    <insert id="insert3">
+        insert into sys_user (
+        user_name, user_password, user_email, user_info, head_img, create_time )
+        values (
+        #{userName}, #{userPassword}, #{userEmail}, #{userInfo},
+        #{headImg, jdbcType = BLOB}, #{createTime, jdbcType = TIMESTAMP})
+        <selectKey keyColumn="id" resultType="long" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <!-- Oracle写法，因其需要先从序列中取值，而后将值作为主键插入数据库中 -->
+    <!--<insert id="insert3">
+        <selectKey keyColumn="id" resultType="long" keyProperty="id" order="BEFORE">
+            select last_insert_id()
+        </selectKey>
+        insert into sys_user (
+        id, user_name, user_password, user_email, user_info, head_img, create_time )
+        values (
+        #{id}, #{userName}, #{userPassword}, #{userEmail}, #{userInfo},
+        #{headImg, jdbcType = BLOB}, #{createTime, jdbcType = TIMESTAMP})
+    </insert>-->
+
+    <select id="selectById" resultMap="userMap">
+        select * from sys_user where id=#{id}
+    </select>
+
+    <select id="selectAll" resultType="SysUser">
+        select id,
+        user_name userName,
+        user_password userPassword,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        from sys_user
+    </select>
+
+    <select id="selectRolesByUserId" resultType="com.mingfei.mybatissamples.model.SysRole">
+        select
+        u.user_name as "user.userName",
+        u.user_email as "user.userEmail",
+        r.id,
+        r.role_name roleName,
+        r.enabled,
+        r.create_by createBy,
+        r.create_time createTime
+        from sys_user u
+        inner join sys_user_role ur on u.id = ur.user_id
+        inner join sys_role r on ur.role_id = r.id
+        where u.id = #{userId}
+    </select>
+
+    <update id="updateById">
+        update sys_user
+        set user_name = #{userName},
+            user_password = #{userPassword},
+            user_email = #{userEmail},
+            user_info = #{userInfo},
+            head_img = #{headImg, jdbcType = BLOB},
+            create_time = #{createTime, jdbcType = TIMESTAMP}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_user where id = #{id}
+    </delete>
+
+    <select id="selectRolesByUserIdAndRoleEnabled" resultType="com.mingfei.mybatissamples.model.SysRole">
+        select
+        r.id,
+        r.role_name roleName,
+        r.enabled,
+        r.create_by createBy,
+        r.create_time createTime
+        from sys_user u
+        inner join sys_user_role ur on u.id = ur.user_id
+        inner join sys_role r on ur.role_id = r.id
+        where u.id = #{userId} and r.enabled = #{enabled}
+    </select>
+
+    <select id="selectRolesByUserIdAndRoleEnabled2" resultType="com.mingfei.mybatissamples.model.SysRole">
+        select
+        r.id,
+        r.role_name roleName,
+        r.enabled,
+        r.create_by createBy,
+        r.create_time createTime
+        from sys_user u
+        inner join sys_user_role ur on u.id = ur.user_id
+        inner join sys_role r on ur.role_id = r.id
+        where u.id = #{sysUser.id} and r.enabled = #{sysRole.enabled}
+    </select>
+
+
+</mapper>
