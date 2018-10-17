@@ -39,6 +39,22 @@
         </selectKey>
     </insert>
 
+    <insert id="insert4" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user (
+        user_name,user_password,
+        <if test="userEmail != null and userEmail != ''">
+            user_email,
+        </if>
+        user_info,head_img,create_time )
+        values (
+        #{userName}, #{userPassword},
+        <if test="userEmail != null and userEmail != ''">
+            #{userEmail},
+        </if>
+        #{userInfo},#{headImg, jdbcType=BLOB},#{createTime, jdbcType=TIMESTAMP}
+        )
+    </insert>
+
     <!-- Oracle写法，因其需要先从序列中取值，而后将值作为主键插入数据库中 -->
     <!--<insert id="insert3">
         <selectKey keyColumn="id" resultType="long" keyProperty="id" order="BEFORE">
@@ -120,6 +136,146 @@
         inner join sys_user_role ur on u.id = ur.user_id
         inner join sys_role r on ur.role_id = r.id
         where u.id = #{sysUser.id} and r.enabled = #{sysRole.enabled}
+    </select>
+
+    <select id="selectByUser" resultType="SysUser">
+        select
+        id,
+        user_name userName,
+        user_password userPassword,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        from sys_user
+        where 1 = 1 <!-- 保证语法正确：两个if可能都不满足 -->
+        <if test="userName != null and userName != ''">
+            and user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="userEmail != null and userEmail != ''">
+            and user_email = #{userEmail}
+        </if>
+    </select>
+
+    <update id="updateByIdSelective2">
+        update sys_user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName}.
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                user_password = #{userPassword},
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                user_email =#{userEmail},
+            </if>
+            <if test="userInfo != null and userInfo != ''">
+                user_info = #{userInfo},
+            </if>
+            <if test="headImg != null">
+                head_img = #{headImg},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime, jdbcType = TIMESTAMP},
+            </if>
+            id = #{id} <!-- 保证语法正确：可能所有的if都不满足,或者部分不满足导致符号错误 -->
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectByUser2" resultType="SysUser">
+        select
+        id,
+        user_name userName,
+        user_password userPassword,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        from sys_user
+        <where>
+            <if test="userName != null and userName !=''">
+                and user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="userEmail != '' and userEmail != null">
+                and user_email = #{userEmail}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateByIdSelective">
+        update sys_user
+        set
+        <if test="userName != null and userName != ''">
+            user_name = #{userName}.
+        </if>
+        <if test="userPassword != null and userPassword != ''">
+            user_password = #{userPassword},
+        </if>
+        <if test="userEmail != null and userEmail != ''">
+            user_email =#{userEmail},
+        </if>
+        <if test="userInfo != null and userInfo != ''">
+            user_info = #{userInfo},
+        </if>
+        <if test="headImg != null">
+            head_img = #{headImg},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime, jdbcType = TIMESTAMP},
+        </if>
+        id = #{id} <!-- 保证语法正确：可能所有的if都不满足,或者部分不满足导致符号错误 -->
+        where id = #{id}
+    </update>
+
+    <select id="selectByIdOrUserName" resultType="com.mingfei.mybatissamples.model.SysUser">
+        select id,
+        user_name userName,
+        user_password userPassword,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        from sys_user
+        where 1=1
+        <choose>
+            <when test="id != null">
+                and id = #{id}
+            </when>
+            <when test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </when>
+            <otherwise>
+                and 1 = 2
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectByIdList" resultType="com.mingfei.mybatissamples.model.SysUser">
+        select id,
+        user_name userName,
+        user_password userPassword,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        from sys_user
+        where id in ${idList}
+    </select>
+
+    <select id="selectByIdList2" resultType="com.mingfei.mybatissamples.model.SysUser">
+        select id,
+        user_name userName,
+        user_password userPassword,
+        user_email userEmail,
+        user_info userInfo,
+        head_img headImg,
+        create_time createTime
+        from sys_user
+        where id in
+        <foreach collection="list" open="{" close="}" separator="," item="id" index="i">
+            #{id}
+        </foreach>
     </select>
 
 

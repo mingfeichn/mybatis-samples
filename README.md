@@ -180,3 +180,65 @@ INSERT INTO `sys_role_privilege` VALUES ('2','5');
     - @DeleteProvider
 
 ## mybatis动态SQL
+OGNL(Object-Graph Navigation Language)
+
+- if
+    - 在where条件中使用if
+    
+    - 在update更新列种使用if
+    
+    - 在insert动态插入列中使用if
+
+- choose(when, otherwise)
+if提供了基本的条件判断，但无法实现if...else的逻辑，此时可以使用choose，when和otherwise
+choose元素包含when和otherwise两个标签，至少有一个when，有0个或1个otherwise
+- trim(where, set)
+    - where
+    如果该标签包含的元素中有返回值，就插入一个where  
+    如果where后面的字符串是以AND和OR开头，就将他们删除
+    - set
+    若该标签包含的元素有返回值，就插入一个set  
+    若set后面的字符串以逗号结尾，就将逗号删除
+    - trim
+    where和set底层通过trim实现  
+    trim标签属性：
+        - prefix: 当trim元素内包含内容时，会给内容增加prefix指定的前缀  
+        - prefixOverrides: 当trim元素内包含内容时，会把内容中匹配的前缀字符串去掉
+        - suffix： 当trim元素内包含内容时，会给内容增加prefix指定的后缀  
+        - suffixOverrides: 当trim元素内包含内容时，会把内容中匹配的后缀字符串去掉  
+        
+        **where标签对应的trim实现：**
+        ```xml
+         <trim prifix="WHERE" prefixOverrides="AND |OR ">
+         ...     
+         </trim>
+        ```
+        这里的AND和OR后面的空格不能省略，为了避免匹配到andes、orders等单词。  
+        实际的prefixeOverrides包含“AND”、“OR”、“AND\n”、“OR\n”、“AND\r”、“OR\r”、“AND\t”、“OR\t”，不仅仅是上面提到的两个带空格的前缀。  
+
+        **set标签对应的trim实现：**
+        ```xml
+         <trim prifix="SET" suffixOverrides=",">
+         ...     
+         </trim>
+        ```
+- foreach
+id in（1，2，3）。可以使用${ids}方式直接获取值，但这种写法不能防止SQL注入，想避免SQL注入就需要用＃{}的方式，这时就要配合使用foreach标签来满足需求。  
+foreach可以对数组、Map或实现了Iterable接口（如List、Set）的对象进行遍历。数组在处理时会转换为List对象，因此foreach遍历的对象可以分为两大类：Iterable类型和Map类型。这两种类型在遍历循环时情况不一样  
+foreach包含的属性：  
+    - collection: 必填，值为要迭代循环的属性名
+    - item：变量名，值为从迭代对象中取出的每一个值
+    - index： 索引的属性名，在集合数组情况下为当前索引值，当迭代循环的对象是Map类型时，这个值为Map的key
+    - open: 整个循环内容开头字符串
+    - close：整个循环内容结尾的字符串
+    - separator：每次循环的分隔符
+    
+
+- bind
+
+## 数据准备
+```
+ALTER TABLE `sys_user` 
+MODIFY COLUMN `user_email` VARCHAR ( 50 ) NOT NULL DEFAULT 'test@126.com' COMMENT '邮箱' 
+AFTER `user_password`;
+```
