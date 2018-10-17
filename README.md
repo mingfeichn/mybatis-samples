@@ -157,3 +157,24 @@ INSERT INTO `sys_role_privilege` VALUES ('1','2');
 INSERT INTO `sys_role_privilege` VALUES ('2','4');
 INSERT INTO `sys_role_privilege` VALUES ('2','5');
 ```
+## mybatis注解方式的基本用法
+优点：对于需求简单的系统，效率较高
+缺点：更新sql后需要重新编译
+
+- @Select
+字段与属性映射三种方式
+
+- @Insert
+
+- @Update
+
+- @Delete
+
+- @Provider
+    - SelectProvider
+    
+    - InsertProvider
+    
+    - UpdateProvider
+    
+    - DeleteProvider
