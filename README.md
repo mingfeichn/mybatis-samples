@@ -222,7 +222,7 @@ choose元素包含when和otherwise两个标签，至少有一个when，有0个�
          ...     
          </trim>
         ```
-- foreach
+- foreach  
 id in（1，2，3）。可以使用${ids}方式直接获取值，但这种写法不能防止SQL注入，想避免SQL注入就需要用＃{}的方式，这时就要配合使用foreach标签来满足需求。  
 foreach可以对数组、Map或实现了Iterable接口（如List、Set）的对象进行遍历。数组在处理时会转换为List对象，因此foreach遍历的对象可以分为两大类：Iterable类型和Map类型。这两种类型在遍历循环时情况不一样  
 foreach包含的属性：  
