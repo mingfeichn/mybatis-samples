@@ -171,10 +171,12 @@ INSERT INTO `sys_role_privilege` VALUES ('2','5');
 - @Delete
 
 - @Provider
-    - SelectProvider
+    - @SelectProvider
     
-    - InsertProvider
+    - @InsertProvider
     
-    - UpdateProvider
+    - @UpdateProvider
     
-    - DeleteProvider
+    - @DeleteProvider
+
+## mybatis动态SQL
