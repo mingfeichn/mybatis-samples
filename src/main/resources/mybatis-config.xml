@@ -28,6 +28,18 @@
         </environment>
     </environments>
 
+    <!-- 数据库别名，多数据库支持 -->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="SQL Server" value="sqlSever"/>
+        <property name="DB2" value="db2"/>
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+        <property name="PostgreSQL" value="postgresql"/>
+        <property name="Derby" value="derby"/>
+        <property name="HSQL" value="hsqldb"/>
+        <property name="H2" value="h2"/>
+    </databaseIdProvider>
+
     <!-- 配置SQL语句和映射配置文件 -->
     <mappers>
         <!--<mapper resource="com/mingfei/mybatissamples/mapper/CountryMapper.xml"/>-->

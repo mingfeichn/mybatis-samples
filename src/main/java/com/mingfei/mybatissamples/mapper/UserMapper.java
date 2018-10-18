@@ -5,6 +5,7 @@ import com.mingfei.mybatissamples.model.SysUser;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserMapper {
     SysUser selectById(Long id);
@@ -103,6 +104,14 @@ public interface UserMapper {
      */
     List<SysUser> selectByUser(SysUser user);
 
+
+    /**
+     * 使用<if></if>支持多数据库
+     * @param user
+     * @return
+     */
+    List<SysUser> selectByUserIf(SysUser user);
+
     /**
      * 根据用户名和邮箱查询用户
      * 使用<where></where>
@@ -178,11 +187,78 @@ public interface UserMapper {
     /**
      * 根据用户ID集合查询
      * 使用foreach实现in集合
+     * 参数为List
      *
      * @param idList
      * @return
      */
     List<SysUser> selectByIdList2(List<Long> idList);
 
+    /**
+     * 根据用户ID集合查询
+     * 使用foreach实现in集合
+     * 参数为Array
+     *
+     * @param idArray
+     * @return
+     */
+    List<SysUser> selectByIdArray(@Param("idArray") Long[] idArray);
+
+    /**
+     * 根据用户ID集合查询
+     * 使用foreach实现in集合
+     * 参数为Map
+     *
+     * @param idMap
+     * @return
+     */
+    List<SysUser> selectByIdMap(Map<String, List<Long>> idMap);
+
+    /**
+     * 根据用户ID集合查询
+     * 使用foreach实现in集合
+     * 参数为Map,循环Map
+     *
+     * @param idMap
+     * @return
+     */
+    List<SysUser> selectByIdMap2(@Param("idMap") Map<String, Long> idMap);
+
+    /**
+     * 根据用户ID集合查询
+     * 使用foreach实现in集合
+     * 参数为对象
+     *
+     * @param sysUser
+     * @return
+     */
+    List<SysUser> selectByObject(SysUser sysUser);
+
+    /**
+     * 根据用户ID集合查询
+     * 使用foreach实现in集合
+     * 参数为对象
+     *
+     * @param sysRole
+     * @return
+     */
+    List<SysUser> selectByObject2(SysRole sysRole);
+
+    /**
+     * 批量插入
+     * 使用foreach批量插入
+     *
+     * @param userList
+     * @return
+     */
+    int insertList(List<SysUser> userList);
+
+    /**
+     * foreach实现动态更新
+     * 参数为Map
+     *
+     * @return
+     */
+    int updateByMap(Map<String, Object> userMap);
 
 }

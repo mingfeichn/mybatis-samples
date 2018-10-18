@@ -58,4 +58,12 @@ public class SysRole {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+    public SysUser getUser() {
+        return user;
+    }
+
+    public void setUser(SysUser user) {
+        this.user = user;
+    }
 }

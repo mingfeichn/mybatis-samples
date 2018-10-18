@@ -1,12 +1,16 @@
 package com.mingfei.mybatissamples.model;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户表
  */
 public class SysUser {
     private Long id;
+
+    private List<Long> ids;
 
     private String userName;
 
@@ -74,5 +78,27 @@ public class SysUser {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
+    }
+
+    @Override
+    public String toString() {
+        return "SysUser{" +
+                "id=" + id +
+                ", ids=" + ids +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userInfo='" + userInfo + '\'' +
+                ", headImg=" + Arrays.toString(headImg) +
+                ", createTime=" + createTime +
+                '}';
     }
 }

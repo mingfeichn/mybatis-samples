@@ -7,8 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Proxy;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class UserMapperTest extends BaseMapperTest {
 
@@ -285,6 +284,22 @@ public class UserMapperTest extends BaseMapperTest {
     }
 
     @Test
+    public void testSelectByUserIf() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser user = new SysUser();
+            user.setUserName("ad");
+            List<SysUser> result = userMapper.selectByUserIf(user);
+            Assert.assertEquals("admin", result.get(0).getUserName());
+
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
     public void testUpdateByIdSelective() {
         SqlSession sqlSession = getSqlSession();
 
@@ -383,6 +398,192 @@ public class UserMapperTest extends BaseMapperTest {
         } finally {
             sqlSession.close();
         }
-
     }
+
+    @Test
+    public void testSelectByIdList2() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<Long> idList = new ArrayList<>();
+            idList.add(1L);
+            idList.add(2L);
+            idList.add(3L);
+            List<SysUser> userList = userMapper.selectByIdList2(idList);
+            Assert.assertTrue(userList.size() == 3);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByIdArray() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            Long[] idArray = new Long[]{1L, 2L, 3L};
+            List<SysUser> userList = userMapper.selectByIdArray(idArray);
+            Assert.assertTrue(userList.size() == 3);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByIdMap() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<Long> idList = new ArrayList<>();
+            idList.add(1L);
+            idList.add(2L);
+            idList.add(3L);
+
+            Map<String, List<Long>> idMap = new HashMap<>();
+            idMap.put("ids", idList);
+
+            List<SysUser> userList = userMapper.selectByIdMap(idMap);
+            Assert.assertTrue(userList.size() == 3);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByIdMap2() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+
+            Map<String, Long> idMap = new HashMap<>();
+            idMap.put("id1", 1L);
+            idMap.put("id2", 2L);
+            idMap.put("id3", 3L);
+
+            List<SysUser> userList = userMapper.selectByIdMap2(idMap);
+            Assert.assertTrue(userList.size() == 3);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByObect() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<Long> ids = new ArrayList<>();
+            ids.add(1L);
+            ids.add(2L);
+            ids.add(3L);
+            SysUser sysUser = new SysUser();
+            sysUser.setIds(ids);
+
+            List<SysUser> userList = userMapper.selectByObject(sysUser);
+            Assert.assertTrue(userList.size() == 3);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByObect2() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<Long> ids = new ArrayList<>();
+            ids.add(1L);
+            ids.add(2L);
+            ids.add(4L);
+            SysUser sysUser = new SysUser();
+            sysUser.setIds(ids);
+
+            SysRole sysRole = new SysRole();
+            sysRole.setUser(sysUser);
+
+            List<SysUser> userList = userMapper.selectByObject2(sysRole);
+            Assert.assertTrue(userList.size() == 3);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testInsertList() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+
+            List<SysUser> userList = new ArrayList<>();
+            // 创建一个user对象
+            SysUser user = new SysUser();
+            user.setUserName("test2");
+            user.setUserPassword("123456");
+            user.setUserEmail("test@126.com");
+            user.setUserInfo("test info");
+            // 正常情况下读取一张图片保存到byte数组中
+            user.setHeadImg(new byte[]{1, 2, 3});
+            user.setCreateTime(new Date());
+
+            SysUser user2 = new SysUser();
+            user2.setUserName("test3");
+            user2.setUserPassword("123456");
+            user2.setUserEmail("test@126.com");
+            user2.setUserInfo("test info");
+            // 正常情况下读取一张图片保存到byte数组中
+            user2.setHeadImg(new byte[]{1, 2, 3});
+            user2.setCreateTime(new Date());
+
+            userList.add(user);
+            userList.add(user2);
+
+            // 将新建的对象插入到数据库中，返回执行SQL影响的行数
+            int result = userMapper.insertList(userList);
+            Assert.assertEquals(2, result);
+
+
+            for (SysUser sysUser : userList)
+            {
+                System.out.println(sysUser.getId());
+            }
+            // 只插入一条数据
+
+        } finally {
+            // 默认sqlSessionFactory.openSession()是不自动提交的
+            sqlSession.rollback();
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testUpdateByMap() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+
+            Map<String,Object> userMap = new HashMap<>();
+            userMap.put("id", 2L);
+            userMap.put("user_name", "test2");
+
+            int result = userMapper.updateByMap(userMap);
+            Assert.assertEquals(1, result);
+
+            SysUser sysUser = userMapper.selectById(2L);
+            Assert.assertEquals("test2", sysUser.getUserName());
+
+        } finally {
+            sqlSession.rollback();
+            sqlSession.close();
+        }
+    }
+
+
 }

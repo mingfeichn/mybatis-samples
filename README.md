@@ -181,18 +181,40 @@ INSERT INTO `sys_role_privilege` VALUES ('2','5');
 
 ## mybatis动态SQL
 OGNL(Object-Graph Navigation Language)
+- MyBatis中可以使用OGNL的地方有两处：  
+    - 动态SQL表达式中
+    - ${param}参数中
 
-- if
+
+
+- MyBatis常用OGNL表达式:  
+    - e1 or e2
+    - e1 and e2
+    - e1 == e2,e1 eq e2
+    - e1 != e2,e1 neq e2
+    - e1 lt e2：小于
+    - e1 lte e2：小于等于，其他gt（大于）,gte（大于等于）
+    - e1 in e2
+    - e1 not in e2
+    - e1 + e2,e1 * e2,e1/e2,e1 - e2,e1%e2
+    - !e,not e：非，求反
+    - e.method(args)调用对象方法
+    - e.property对象属性值
+    - e1[e2]按索引取值，List,数组和Map
+    - @class@method(args)调用类的静态方法
+    - @class@field 调用类的静态字段值
+
+### if
     - 在where条件中使用if
     
     - 在update更新列种使用if
     
     - 在insert动态插入列中使用if
 
-- choose(when, otherwise)
+### choose(when, otherwise)
 if提供了基本的条件判断，但无法实现if...else的逻辑，此时可以使用choose，when和otherwise
 choose元素包含when和otherwise两个标签，至少有一个when，有0个或1个otherwise
-- trim(where, set)
+### trim(where, set)
     - where
     如果该标签包含的元素中有返回值，就插入一个where  
     如果where后面的字符串是以AND和OR开头，就将他们删除
@@ -222,19 +244,56 @@ choose元素包含when和otherwise两个标签，至少有一个when，有0个�
          ...     
          </trim>
         ```
-- foreach  
+### foreach  
 id in（1，2，3）。可以使用${ids}方式直接获取值，但这种写法不能防止SQL注入，想避免SQL注入就需要用＃{}的方式，这时就要配合使用foreach标签来满足需求。  
 foreach可以对数组、Map或实现了Iterable接口（如List、Set）的对象进行遍历。数组在处理时会转换为List对象，因此foreach遍历的对象可以分为两大类：Iterable类型和Map类型。这两种类型在遍历循环时情况不一样  
-foreach包含的属性：  
-    - collection: 必填，值为要迭代循环的属性名
-    - item：变量名，值为从迭代对象中取出的每一个值
-    - index： 索引的属性名，在集合数组情况下为当前索引值，当迭代循环的对象是Map类型时，这个值为Map的key
-    - open: 整个循环内容开头字符串
-    - close：整个循环内容结尾的字符串
-    - separator：每次循环的分隔符
-    
+数组或集合类型的参数默认的名字。推荐使用@Param来指定参数的名字，这时collection就设置为通过@Param注解指定的名字。  
+    - foreach包含的属性：  
+        - collection: 必填，值为要迭代循环的属性名
+        - item：变量名，值为从迭代对象中取出的每一个值
+        - index： 索引的属性名，在集合数组情况下为当前索引值，当迭代循环的对象是Map类型时，这个值为Map的key
+        - open: 整个循环内容开头字符串
+        - close：整个循环内容结尾的字符串
+        - separator：每次循环的分隔符
 
-- bind
+    - 参数为List
+    
+    - 参数为Array
+    
+    - 参数为Map
+    使用Map和使用@Param注解方式类似，将collection指定为对应Map中的key即可。如果要循环所传入的Map，推荐使用@Param注解指定名字，此时可将collection设置为指定的名字，如果不想指定名字，就使用默认值_parameter。
+    
+    - 参数为对象
+    这种情况下指定为对象的属性名即可。当使用对象内多层嵌套的对象时，使用属性.属性（集合和数组可以使用下标取值）的方式可以指定深层的属性值。
+    
+    - foreach批量插入
+    从MyBatis3.3.1版本开始，MyBatis开始支持批量新增回写主键值的功能，这个功能首先要求数据库主键值为自增类型，同时还要求该数据库提供的JDBC驱动可以支持返回批量插入的主键值（JDBC提供了接口，但并不是所有数据库都完美实现了该接口），因此到目前为止，可以完美支持该功能的仅有MySQL数据库。由于SQLServer数据库官方提供的JDBC只能返回最后一个插入数据的主键值，所以不能支持该功能。
+    
+    - foreach实现动态更新
+    当参数是Map类型的时候，foreach标签的index属性值对应的不是索引值，而是Map中的key，利用这个key可以实现动态UPDATE。
+    
+### bind
+    bind标签可以使用OGNL表达式创建一个变量并将其绑定到上下文中。  
+    bind标签的两个属性都是必选项，name为绑定到上下文的变量名，value为OGNL表达式。创建一个bind标签的变量后，就可以在下面直接使用，使用bind拼接字符串不仅可以避免因更换数据库而修改SQL，也能预防SQL注入
+
+### 多数据库支持
+bind标签并不能解决更换数据库带来的所有问题，那么还可以通过什么方式支持不同的数据库呢？  
+这需要用到`if`标签以及由MyBatis提供的`databaseIdProvider`数据库厂商标识配置。
+MyBatis可以根据不同的数据库厂商执行不同的语句，这种多厂商的支持是基于映射语句中的databaseId属性的。MyBatis会加载不带databaseId属性和带有匹配当前数据库databaseId属性的所有语句。如果同时找到带有databaseId和不带databaseId的相同语句，则后者会被舍弃。为支持多厂商特性，只要在mybatis-config.xml文件中加入databaseIdProvider配置即可。  
+```
+＜databaseIdProvidertype=＂DB_VENDOR＂/＞
+```  
+这里的DB_VENDOR会通过DatabaseMetaData＃getDatabaseProductName（）返回的字符串进行设置。由于通常情况下这个字符串都非常长而且相同产品的不同版本会返回不同的值，所以通常会通过设置属性别名来使其变短，
+在有property配置时，databaseId将被设置为第一个能匹配数据库产品名称的属性键对应的值，如果没有匹配的属性则会被设置为null。在这个例子中，如果getDatabaseProductName（）返回MicrosoftSQLServer，databaseId将被设置为sqlserver。
+DB_VENDOR的匹配策略为，DatabaseMetaData＃getDatabaseProductName（）返回的字符串包含property中name部分的值即可匹配，所以虽然SQLServer的产品全名一般为MicrosoftSQLServer，但这里只要设置为SQLServer就可以匹配。数据库产品名一般由所选择的当前数据库的JDBC驱动所决定，只要找到对应数据库DatabaseMetaData接口的实现类，一般在getDatabaseProductName（）方法中就可以直接找到该值。任何情况下都可以通过调用DatabaseMetaData＃getDatabaseProductName（）方法获取具体的值。除了增加上面的配置外，映射文件也是要变化的，关键在于以下几个映射文件的标签中含有的databaseId属性：
+- select
+- insert
+- delete
+- update
+- selectKey
+- sql
+
+  
 
 ## 数据准备
 ```
