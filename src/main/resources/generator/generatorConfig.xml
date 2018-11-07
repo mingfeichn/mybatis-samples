@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id = "MySqlContext" targetRuntime="MyBatis3"
+             defaultModelType="flat"> <!-- flat:每个表只生成一个实体类 -->
+        <property name="beginningDelimiter" value="`"/> <!-- 因为是mysql，前后分隔符使用` -->
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 注释生成器 -->
+        <commentGenerator>
+            <property name="suppressDate" value="true"/> <!-- 禁止在注释中生成日期 -->
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据源 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.47.128:3306/mybatis"
+                        userId="service"
+                        password="123123">
+        </jdbcConnection>
+
+        <!-- model文件路径 -->
+        <javaModelGenerator targetPackage="com.mingfei.mybatissamples.model"
+                            targetProject="src\main\java">
+            <property name="trimString" value="true"/>
+        </javaModelGenerator>
+
+        <!-- mapper.xml文件路径 -->
+        <sqlMapGenerator targetPackage="com.mingfei.mybatissamples.mapper"
+                         targetProject="src\main\resources"/>
+
+        <!-- mapper接口路径 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.mingfei.mybatissamples.mapper"
+                             targetProject="src\main\java"/>
+
+        <!-- %匹配数据库中所有的表 -->
+        <table tableName="%">
+            <generatedKey column="id" sqlStatement="mybatis"/> <!-- id为每张表的自增主键，mybatis为数据库名 -->
+        </table>
+    </context>
+
+</generatorConfiguration>
