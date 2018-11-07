@@ -1,5 +1,6 @@
 # mybatis-samples
 mybatis示例
+mybatis版本：3.4.6
 
 ## mybatis基础配置
 ### 
@@ -301,3 +302,135 @@ ALTER TABLE `sys_user`
 MODIFY COLUMN `user_email` VARCHAR ( 50 ) NOT NULL DEFAULT 'test@126.com' COMMENT '邮箱' 
 AFTER `user_password`;
 ```
+
+# MBG(mybatis generator)
+## 概述
+MBG与mybatis版本无关  
+[文档] http://www.mybatis.org/generator/  
+
+
+##使用：
+1. 配置XML文件
+2. 运行MBG,MBG运行方式：
+    - 使用java编写代码运行
+        1. 引用mybatis-generator-core包
+        2. 编写运行代码  
+    `使用java运行的优点：对于特殊配置类只要在classpath中就可以直接使用`  
+    `使用java运行的缺点：和当前项目绑定，多子模块项目需要增加代码编写量`
+    - 从命令提示符运行
+    - 使用maven plugin运行
+    - 使用eclipse插件运行
+    
+## example
+### 概述  
+Example类指定如何构建一个动态的where子句. 表中的每个non-BLOB列可以被包括在where子句中.  
+Example类可以用来生成一个几乎无限的where子句.  
+Example类包含一个内部静态类 Criteria 包含一个用 anded 组合在where子句中的条件列表. Example类包含一个 List 属性,所有内部类Criteria中的子句会用 ored组合在一起. 使用不同属性的 Criteria 类允许您生成无限类型的where子句.  
+创建 Criteria 对象 可以使用Example类中的 createCriteria() 或者 or() . 如果 Criteria 对象是用 createCriteria() 创建的，它会自动为 List 属性添加一个 Criteria 对象 - 这使得它更容易写一个简单的where子句， 如果您不需要 or 或者其他几个子句组合的话. 用 or(Criteria criteria) 方法创建 Criteria 对象, 方法里的 criteria 对象会被添加进 Criteria 对象的列表中.
+- Criteria  
+Criteria包含一个Cretiron的集合,每一个Criteria对象内包含的Cretiron之间是由AND连接的,是逻辑与的关系。  
+- oredCriteria  
+Example内有一个成员叫oredCriteria,是Criteria的集合,就想其名字所预示的一样，这个集合中的Criteria是由OR连接的，是逻辑或关系。oredCriteria就是ORed Criteria。  
+- distinct
+Example类的distinct字段用于指定DISTINCT查询。  
+- orderByClause
+orderByClause字段用于指定ORDER BY条件,这个条件没有构造方法,直接通过传递字符串值指定。  
+
+## 总结
+在条件很多并且判断很多的情况下，避免使用Example查询。这种情况下，使用XML方式会更有效。  
+    
+# mybatis高级查询
+内容包括：
+## 高级结果映射
+
+### 一对一映射
+
+### 一对多映射
+
+### 鉴别器映射
+
+## 存储过程
+
+### 第一个存储过程
+
+### 第二个存储过程
+
+### 第三、四个存储过程
+
+### 在Oracle中使用游标参数的存储过程
+
+## 使用枚举或其他对象
+
+### 使用Mybatis提供的枚举处理器
+
+### 使用自定义的类型处理器
+
+### 对JAVA8日期(JSR-310)的支持
+
+# mybatis缓存的配置
+
+## 一级缓存
+
+## 二级缓存
+
+### 二级缓存的配置
+
+### 使用二级缓存
+
+## 集成EhCache
+
+## 集成redis缓存
+
+## 脏数据的产生和避免
+
+## 二级缓存使用场景
+
+## 总结
+
+# mybatis插件开发
+
+## 拦截器接口
+
+## 拦截器签名
+
+### Executor接口
+
+### ParameterHandler接口
+
+### ResultSetHandler接口
+
+### StatementHandler接口
+
+## 下划线键值转小写驼峰形式插件
+
+## 分页插件
+
+### PageInterceptor拦截器类
+
+
+### Dialect接口
+
+### MySqlDialect实现
+
+## 总结
+
+
+# Spring集成Mybatis
+
+## 创建基本的Maven Web项目
+
+## 集成Spring和 Spring MVC
+
+## 集成Mybatis
+
+## 实例
+
+## 总结
+
+# Spring boot集成mybatis
+
+# Mybatis开源项目
+
+# 类型处理器
+MyBatis在预处理语句（PreparedStatement）中设置一个参数或从结果集中取出一个值时，都会使用类型处理器将获取的值以合适的方式转换成Java类型。  
+

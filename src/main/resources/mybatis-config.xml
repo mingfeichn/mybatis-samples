@@ -21,7 +21,7 @@
             </transactionManager>
             <dataSource type="UNPOOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://192.168.231.12:3306/mybatis"/>
+                <property name="url" value="jdbc:mysql://192.168.47.128:3306/mybatis"/>
                 <property name="username" value="service"/>
                 <property name="password" value="123123"/>
             </dataSource>
