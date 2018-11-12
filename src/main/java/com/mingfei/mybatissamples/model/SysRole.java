@@ -1,6 +1,7 @@
 package com.mingfei.mybatissamples.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -192,5 +193,26 @@ public class SysRole {
 
     public void setUser(SysUser user) {
         this.user = user;
+    }
+
+
+    private List<SysPrivilege> privilegeList;
+
+    public List<SysPrivilege> getPrivilegeList() {
+        return privilegeList;
+    }
+
+    public void setPrivilegeList(List<SysPrivilege> priviligeList) {
+        this.privilegeList = priviligeList;
+    }
+
+    private CreateInfo createInfo;
+
+    public CreateInfo getCreateInfo() {
+        return createInfo;
+    }
+
+    public void setCreateInfo(CreateInfo createInfo) {
+        this.createInfo = createInfo;
     }
 }

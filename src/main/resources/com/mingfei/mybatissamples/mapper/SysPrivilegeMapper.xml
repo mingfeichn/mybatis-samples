@@ -10,6 +10,13 @@
     <result column="privilege_name" jdbcType="VARCHAR" property="privilegeName" />
     <result column="privilege_url" jdbcType="VARCHAR" property="privilegeUrl" />
   </resultMap>
+
+  <resultMap id="privilegeMap" type="SysPrivilege">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="privilege_name" jdbcType="VARCHAR" property="privilegeName" />
+    <result column="privilege_url" jdbcType="VARCHAR" property="privilegeUrl" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
@@ -100,4 +107,12 @@
       privilege_url = #{privilegeUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!-- collection嵌套查询 -->
+  <select id="selectPrivilegeByRoleId" resultMap="privilegeMap">
+    select p.*
+    from sys_privilege p
+    inner join sys_role_privilege rp on rp.privilege_id = p.id
+    where role_id = #{roleId}
+  </select>
 </mapper>

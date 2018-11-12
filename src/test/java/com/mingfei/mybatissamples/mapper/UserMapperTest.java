@@ -1,5 +1,6 @@
 package com.mingfei.mybatissamples.mapper;
 
+import com.mingfei.mybatissamples.model.SysPrivilege;
 import com.mingfei.mybatissamples.model.SysRole;
 import com.mingfei.mybatissamples.model.SysUser;
 import org.apache.ibatis.session.SqlSession;
@@ -626,6 +627,66 @@ public class UserMapperTest extends BaseMapperTest {
         } finally {
             sqlSession.close();
 
+        }
+    }
+
+    @Test
+    public void testSelectAllUserAndRoles() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<SysUser> userList = userMapper.selectAllUserAndRoles();
+            System.out.println("用户数： " + userList.size());
+            for (SysUser user : userList) {
+                System.out.println("用户名： " + user.getUserName());
+                for (SysRole role : user.getRoleList()) {
+                    System.out.println("角色名： " + role.getRoleName());
+                }
+            }
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllUserAndRoles2() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<SysUser> userList = userMapper.selectAllUserAndRoles2();
+            System.out.println("用户数： " + userList.size());
+            for (SysUser user : userList) {
+                System.out.println("用户名： " + user.getUserName());
+                for (SysRole role : user.getRoleList()) {
+                    System.out.println("角色名： " + role.getRoleName());
+                    for (SysPrivilege privilege : role.getPrivilegeList()) {
+                        System.out.println("权限名： " + privilege.getPrivilegeName());
+                    }
+                }
+            }
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllUserAndRolesSelect() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser user = userMapper.selectAllUserAndRolesSelect(1L);
+            System.out.println("用户名： " + user.getUserName());
+            for (SysRole role : user.getRoleList()) {
+                System.out.println("角色名： " + role.getRoleName());
+                for (SysPrivilege privilege : role.getPrivilegeList()) {
+                    System.out.println("权限名： " + privilege.getPrivilegeName());
+                }
+            }
+
+        } finally {
+            sqlSession.close();
         }
     }
 

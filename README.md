@@ -359,13 +359,15 @@ resultMap支持继承
 #### 使用resultMap的association标签配置一对一映射
 
 #### association标签的嵌套查询
-懒加载可以将多表关联查询变为多个单表查询，提高查询效率  
-只有当调用属性的get/set方法时才进行嵌套查询  
+懒加载可以将多表关联查询变为多个单表查询，提高查询效率，只有当调用属性的get/set方法时才进行嵌套查询，aggressiveLazyLoading配置为false时生效
 Mybatis提供了参数lazyLoadTriggerMethods，当调用配置的方法时便可加载全部的延迟数据，默认值为：
 equals,clone,hashCode,toString
 
-
 ### 一对多映射
+#### 使用collection构建一对多映射
+- 注意别名的嵌套
+- collection和association的配合使用
+#### collection嵌套查询
 
 ### 鉴别器映射
 

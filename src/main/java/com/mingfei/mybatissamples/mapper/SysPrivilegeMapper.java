@@ -1,6 +1,9 @@
 package com.mingfei.mybatissamples.mapper;
 
 import com.mingfei.mybatissamples.model.SysPrivilege;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface SysPrivilegeMapper {
     /**
@@ -50,4 +53,12 @@ public interface SysPrivilegeMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(SysPrivilege record);
+
+    /**
+     * 根据角色ID查询对应的所有权限
+     *
+     * @param roleId 角色ID
+     * @return 角色对应的所有权限
+     */
+    List<SysPrivilege> selectPrivilegeByRoleId(@Param("roleId") int roleId);
 }

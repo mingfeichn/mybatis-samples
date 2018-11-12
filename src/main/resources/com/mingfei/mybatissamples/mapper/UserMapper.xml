@@ -42,13 +42,27 @@
     <!-- property：对应实体类中的属性名，必填；javaType：属性对应的java类型；
          resultMap: 可以使用已有的resultMap; columnPrefix: 查询列的前缀，配置前缀后，在子标签配置result的column时可以省略前缀-->
     <resultMap id="userRoleMap" type="SysUser" extends="userMap">
-        <association property="role" columnPrefix="role_" resultMap="com.mingfei.mybatissamples.mapper.SysRoleMapper.roleMap">
+        <association property="role" columnPrefix="role_"
+                     resultMap="com.mingfei.mybatissamples.mapper.SysRoleMapper.roleMap">
         </association>
     </resultMap>
 
-    <!-- 使用association标签的嵌套查询 -->
+    <!-- 一对一映射，使用association标签的嵌套查询 -->
     <resultMap id="userRoleMapSelect" type="SysUser" extends="userMap">
-        <association property="role" fetchType="lazy" column="{id=role_id}" select="com.mingfei.mybatissamples.mapper.SysRoleMapper.selectRoleById"/>
+        <association property="role" fetchType="lazy" column="{id=role_id}"
+                     select="com.mingfei.mybatissamples.mapper.SysRoleMapper.selectRoleById"/>
+    </resultMap>
+
+    <!-- 一对多映射 -->
+    <resultMap id="userRoleListMap" type="SysUser" extends="userMap">
+        <collection property="roleList" columnPrefix="role_"
+                    resultMap="com.mingfei.mybatissamples.mapper.SysRoleMapper.rolePrivilegeListMap"/>
+    </resultMap>
+
+    <!-- 一对多映射，collection嵌套查询 -->
+    <resultMap id="userRoleListMapSelect" type="SysUser" extends="userMap">
+        <collection property="roleList" column="{userId=id}" fetchType="lazy"
+                    select="com.mingfei.mybatissamples.mapper.SysRoleMapper.selectRoleByUserId"/>
     </resultMap>
 
     <insert id="insert">
@@ -94,14 +108,14 @@
     </insert>
     <insert id="insertList" useGeneratedKeys="true" keyProperty="id">
         insert into sys_user
-            (
-            user_name,
-            user_password,
-            user_email,
-            user_info,
-            head_img,
-            create_time
-            )
+        (
+        user_name,
+        user_password,
+        user_email,
+        user_info,
+        head_img,
+        create_time
+        )
         values
         <foreach collection="list" item="user" separator=",">
             (
@@ -245,7 +259,7 @@
         create_time createTime
         from sys_user where user_name like '%'||#{userName}||'%'
     </select>
-    
+
     <!-- 多数据库, 使用if标签配合默认的上下文中的_databaseId参数 -->
     <select id="selectByUserIf" resultType="SysUser">
         select
@@ -471,7 +485,7 @@
     </select>
 
     <!-- 自动映射，关联的嵌套结果映射 -->
-    <select id="selectUserAndUserById" resultType = "SysUser">
+    <select id="selectUserAndUserById" resultType="SysUser">
         select
           u.id,
           u.user_name userName,
@@ -493,7 +507,7 @@
         u.id = #{id}
     </select>
 
-    <!-- 使用resultMap映射 -->
+    <!-- 一对一映射，使用resultMap映射 -->
     <select id="selectUserAndUserById2" resultMap="userRoleMap">
         select
           u.id,
@@ -516,6 +530,7 @@
         u.id = #{id}
     </select>
 
+    <!-- 一对一映射，使用association和懒加载 -->
     <select id="selectUserAndRoleBySelect" resultMap="userRoleMapSelect">
         select
           u.id,
@@ -533,4 +548,63 @@
           u.id = #{id}
     </select>
 
+    <!-- 一对多映射，单层嵌套 -->
+    <select id="selectAllUserAndRoles" resultMap="userRoleListMap">
+        select
+          u.id,
+          u.user_name ,
+          u.user_password ,
+          u.user_email ,
+          u.user_info ,
+          u.head_img ,
+          u.create_time ,
+          r.id role_id,
+          r.role_name role_role_name,
+          r.enabled role_enabled,
+          r.create_by role_create_by,
+          r.create_time role_create_time
+        from
+          sys_user u
+          inner join sys_user_role ur on u.id = ur.user_id
+          inner join sys_role r on ur.role_id = r.id
+    </select>
+
+    <!-- 一对多映射，两层嵌套 -->
+    <select id="selectAllUserAndRoles2" resultMap="userRoleListMap">
+        select
+          u.id,
+          u.user_name ,
+          u.user_password ,
+          u.user_email ,
+          u.user_info ,
+          u.head_img ,
+          u.create_time ,
+          r.id role_id,
+          r.role_name role_role_name,
+          r.enabled role_enabled,
+          r.create_by role_create_by,
+          r.create_time role_create_time,
+          p.id role_privilege_id,
+          p.privilege_name role_privilege_privilege_name,
+          p.privilege_url role_privlege_privilege_url
+        from
+          sys_user u
+          inner join sys_user_role ur on u.id = ur.user_id
+          inner join sys_role r on ur.role_id = r.id
+          inner join sys_role_privilege rp on rp.role_id = r.id
+          inner join sys_privilege p on p.id = rp.privilege_id
+    </select>
+
+    <select id="selectAllUserAndRolesSelect" resultMap="userRoleListMapSelect">
+        select
+          u.id,
+          u.user_name,
+          u.user_password,
+          u.user_email,
+          u.user_info,
+          u.head_img,
+          u.create_time
+        from sys_user u
+        where u.id = #{id}
+    </select>
 </mapper>

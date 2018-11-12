@@ -289,4 +289,28 @@ public interface UserMapper {
      */
     SysUser selectUserAndRoleBySelect(@Param("id") Long id);
 
+    /**
+     * 获取所有用户及对应的所有角色
+     * 一对多映射
+     *
+     * @return 所有用户及对应的所有角色
+     */
+    List<SysUser> selectAllUserAndRoles();
+
+    /**
+     * 获取所有用户及对应的所有角色
+     * 一对多映射,两层嵌套
+     *
+     * @return 所有用户及对应的所有角色
+     */
+    List<SysUser> selectAllUserAndRoles2();
+
+    /**
+     * 通过嵌套查询获取指定用户的信息以及用户的角色和权限信息
+     *
+     * @param id 用户ID
+     * @return 指定用户的信息以及用户的角色和权限信息
+     */
+    SysUser selectAllUserAndRolesSelect(@Param("id") Long id);
+
 }

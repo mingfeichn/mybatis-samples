@@ -2,7 +2,9 @@ package com.mingfei.mybatissamples.mapper;
 
 import com.mingfei.mybatissamples.model.SysRole;
 import com.mingfei.mybatissamples.model.SysRoleExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface SysRoleMapper {
@@ -93,4 +95,18 @@ public interface SysRoleMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(SysRole record);
+
+    /**
+     * 获取所有角色及对应的权限
+     *
+     * @return 所有角色及对应的权限
+     */
+    List<SysRole> selectAllRoleAndPrivileges();
+
+    /**
+     * 获取所有角色
+     * @return 所有角色
+     */
+    List<SysRole> selectAllRoles();
+
 }

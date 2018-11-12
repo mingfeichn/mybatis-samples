@@ -1,5 +1,6 @@
 package com.mingfei.mybatissamples.mapper;
 
+import com.mingfei.mybatissamples.model.SysPrivilege;
 import com.mingfei.mybatissamples.model.SysRole;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
@@ -151,6 +152,38 @@ public class RoleMapperTest extends BaseMapperTest {
         } finally {
             sqlSession.rollback();
             sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllRoleAndPrivileges() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            SysRoleMapper roleMapper = sqlSession.getMapper(SysRoleMapper.class);
+            List<SysRole> roleList = roleMapper.selectAllRoleAndPrivileges();
+            System.out.println("角色数量： " + roleList.size());
+            for (SysRole role : roleList) {
+                System.out.println("角色名： " + role.getRoleName());
+                for (SysPrivilege privilege : role.getPrivilegeList()) {
+                    System.out.println("权限名： " + privilege.getPrivilegeName());
+                }
+            }
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllRoles() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            SysRoleMapper roleMapper = sqlSession.getMapper(SysRoleMapper.class);
+            List<SysRole> roleList = roleMapper.selectAllRoles();
+            System.out.println("角色数量： " + roleList.size());
+        } finally {
+            sqlSession.close();
+
         }
     }
 }

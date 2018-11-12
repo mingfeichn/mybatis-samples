@@ -20,6 +20,18 @@ public class SysUser {
         this.ids = ids;
     }
 
+    // 一对多映射
+    private List<SysRole> roleList;
+
+    public List<SysRole> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<SysRole> roleList) {
+        this.roleList = roleList;
+    }
+
+    // 一对一映射
     private SysRole role;
 
     public SysRole getSysRole() {
