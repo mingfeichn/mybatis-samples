@@ -20,6 +20,16 @@ public class SysUser {
         this.ids = ids;
     }
 
+    private SysRole role;
+
+    public SysRole getSysRole() {
+        return role;
+    }
+
+    public void setSysRole(SysRole sysRole) {
+        this.role = sysRole;
+    }
+
     /**
      * Database Column Remarks:
      *   用户ID

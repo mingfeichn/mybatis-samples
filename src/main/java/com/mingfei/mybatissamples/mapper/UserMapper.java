@@ -107,6 +107,7 @@ public interface UserMapper {
 
     /**
      * 使用<if></if>支持多数据库
+     *
      * @param user
      * @return
      */
@@ -260,5 +261,32 @@ public interface UserMapper {
      * @return
      */
     int updateByMap(Map<String, Object> userMap);
+
+    /**
+     * 根据用户id获取用户信息和角色信息
+     * 一对一映射，使用自动映射
+     *
+     * @param id 用户ID
+     * @return 用户信息
+     */
+    SysUser selectUserAndUserById(@Param("id") Long id);
+
+    /**
+     * 根据用户id获取用户信息和角色信息
+     * 一对一映射，使用resultMap映射
+     *
+     * @param id 用户ID
+     * @return 用户信息
+     */
+    SysUser selectUserAndUserById2(@Param("id") Long id);
+
+    /**
+     * 根据用户id获取用户信息和角色信息
+     * 一对一映射，使用association标签的嵌套查询
+     *
+     * @param id 用户ID
+     * @return 用户信息
+     */
+    SysUser selectUserAndRoleBySelect(@Param("id") Long id);
 
 }

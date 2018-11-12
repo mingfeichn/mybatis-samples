@@ -549,8 +549,7 @@ public class UserMapperTest extends BaseMapperTest {
             Assert.assertEquals(2, result);
 
 
-            for (SysUser sysUser : userList)
-            {
+            for (SysUser sysUser : userList) {
                 System.out.println(sysUser.getId());
             }
             // 只插入一条数据
@@ -569,7 +568,7 @@ public class UserMapperTest extends BaseMapperTest {
         try {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
-            Map<String,Object> userMap = new HashMap<>();
+            Map<String, Object> userMap = new HashMap<>();
             userMap.put("id", 2L);
             userMap.put("user_name", "test2");
 
@@ -585,5 +584,49 @@ public class UserMapperTest extends BaseMapperTest {
         }
     }
 
+    @Test
+    public void testSelectUserAndRoleById() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser sysUser = userMapper.selectUserAndUserById(1001L);
+            Assert.assertNotNull(sysUser);
+            Assert.assertNotNull(sysUser.getSysRole());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectUserAndRoleById2() {
+        SqlSession sqlSession = getSqlSession();
+
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser sysUser = userMapper.selectUserAndUserById2(1001L);
+            Assert.assertNotNull(sysUser);
+            Assert.assertNotNull(sysUser.getSysRole());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectUserAndRoleByIdSelect() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser user = userMapper.selectUserAndRoleBySelect(1001L);
+            Assert.assertNotNull(user);
+            System.out.println("调用user.equals(null)");
+            user.equals(null);
+            System.out.println("调用user.getRole()");
+            Assert.assertNotNull(user.getSysRole());
+        } finally {
+            sqlSession.close();
+
+        }
+    }
 
 }

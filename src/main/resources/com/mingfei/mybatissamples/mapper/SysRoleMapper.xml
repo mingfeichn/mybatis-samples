@@ -12,6 +12,15 @@
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
+  <resultMap id="roleMap" type="com.mingfei.mybatissamples.model.SysRole">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="enabled" jdbcType="INTEGER" property="enabled" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
@@ -270,4 +279,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectRoleById" resultMap="roleMap">
+    select * from sys_role where id = #{id}
+  </select>
 </mapper>

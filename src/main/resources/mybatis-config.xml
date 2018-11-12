@@ -6,6 +6,7 @@
     <!-- 指定使用log4j输出日志 -->
     <settings>
         <setting name="logImpl" value="LOG4J"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
 
     <!-- 配置包的别名，mybatis中常用到类的全限定名，配置别名后，使用类时无需写包部分 -->
@@ -21,7 +22,7 @@
             </transactionManager>
             <dataSource type="UNPOOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://192.168.47.128:3306/mybatis"/>
+                <property name="url" value="jdbc:mysql://192.168.47.129:3306/mybatis"/>
                 <property name="username" value="service"/>
                 <property name="password" value="123123"/>
             </dataSource>
